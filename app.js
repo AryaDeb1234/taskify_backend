@@ -47,12 +47,18 @@ app.use(session({
     mongoUrl: process.env.db_url,
     collectionName: "sessions"
   }),
+  // cookie: {
+  //   maxAge: 1000 * 60 * 60, // 1 hour
+  //   httpOnly: true,
+  //   secure: process.env.NODE_ENV === "production", // send cookie only over HTTPS in production
+  //   sameSite: process.env.NODE_ENV === "production" ? "none" : "lax" // allow cross-site cookies
+  // }
   cookie: {
-    maxAge: 1000 * 60 * 60, // 1 hour
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production", // send cookie only over HTTPS in production
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax" // allow cross-site cookies
-  }
+  maxAge: 1000 * 60 * 60, // 1 hour
+  httpOnly: true,
+  secure: false, // for locally use
+  sameSite: "lax" //  
+ }
 }));
 
 
