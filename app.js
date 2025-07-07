@@ -48,9 +48,13 @@ app.use(session({
     collectionName: "sessions"
   }),
   cookie: {
-    maxAge: 1000 * 60 * 60 // 1 hour
+    maxAge: 1000 * 60 * 60, // 1 hour
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production", // send cookie only over HTTPS in production
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax" // allow cross-site cookies
   }
 }));
+
 
 app.use(flash());
 
