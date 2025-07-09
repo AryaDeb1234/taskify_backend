@@ -53,12 +53,18 @@ app.use(session({
   //   secure: process.env.NODE_ENV === "production", // send cookie only over HTTPS in production
   //   sameSite: process.env.NODE_ENV === "production" ? "none" : "lax" // allow cross-site cookies
   // }
-  cookie: {
+//   cookie: {
+//   maxAge: 1000 * 60 * 60, // 1 hour
+//   httpOnly: true,
+//   secure: false, // for locally use
+//   sameSite: "lax" //  
+//  }
+cookie: {
   maxAge: 1000 * 60 * 60, // 1 hour
   httpOnly: true,
-  secure: false, // for locally use
-  sameSite: "lax" //  
- }
+  secure: true, // Cookies sent only over HTTPS
+  sameSite: "none" // Allow cross-origin cookies
+}
 }));
 
 
