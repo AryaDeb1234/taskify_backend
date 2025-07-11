@@ -1,14 +1,15 @@
-require("dotenv").config();
-
 const fs = require("fs");
 const path = require("path");
 const user = require("../models/user");
 const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
 
-// Load public key for verifying JWT from env
-const pubKeyPath = process.env.PUBLIC_KEY_PATH || path.join(__dirname, "..", "rsa_public.pem");
-const pub_key = fs.readFileSync(pubKeyPath, "utf8");
+// Load public key for verifying JWT
+const pub_key = process.env.PUBLIC_KEY
+  ? process.env.PUBLIC_KEY
+  : fs.readFileSync(path.join(__dirname, "..", "rsa_public.pem"), "utf8");
+
+  console.log("Loaded public key:", pub_key );
 
 // Options for JWT strategy
 const options = {
