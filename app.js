@@ -21,7 +21,7 @@ app.use((req, res, next) => {
 
 
 // MongoDB Connection
-mongoose.connect(process.env.db_url, {
+mongoose.connect(process.env.DB_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
