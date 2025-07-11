@@ -1,46 +1,37 @@
-var passport=require("passport");
+const fs = require("fs");
+const path = require("path");
+const user = require("../models/user");
+const JwtStrategy = require("passport-jwt").Strategy;
+const ExtractJwt = require("passport-jwt").ExtractJwt;
 
-var localstratagey=require("passport-local").Strategy;
+// Load public key for verifying JWT
+const pathtokey = path.join(__dirname, "..", "rsa_public.pem");
+const pub_key = fs.readFileSync(pathtokey, "utf8");
 
-var {validpassword}=require("../lib/passwordutilis");
+// Options for JWT strategy
+const options = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: pub_key,
+  algorithms: ["RS256"],
+};
 
-var user=require("../models/user");
+// JWT strategy
+const strategy = new JwtStrategy(options, async (payload, done) => {
+  try {
+    let existingUser = await user.findById(payload.sub);
 
-
-var verifycallback=async (username,password,done)=>{
-   try {
-    let founduser=await user.findOne({username});
-
-    if (!founduser) {
-        return done(null,false,{message:"user not found"});
-    }
-
-    let isvalid=validpassword(password,founduser.hash,founduser.salt);
-
-    if (isvalid) {
-        return done(null,founduser);
+    if (existingUser) {
+      return done(null, existingUser);
     } else {
-        return done(null,false,{message:"can't match"});
+      return done(null, false);
     }
+  } catch (err) {
+    console.error("Error in JWT strategy:", err);
+    return done(err, false);
+  }
+});
 
-   } catch (err) {
-    return done(err);
-   }
-}
-
-let Strategy=new localstratagey(verifycallback);
-
-passport.use(Strategy);
-
-passport.serializeUser(function(userobj,done){
-    return done(null,userobj.id);
-})
-
-passport.deserializeUser(async function(id,done){
-    try {
-        let founduser=await user.findById(id);
-        return done(null,founduser);
-    } catch (err) {
-        return done(err);
-    }
-})
+// Export function to initialize JWT strategy
+module.exports = (passport) => {
+  passport.use(strategy);
+};
