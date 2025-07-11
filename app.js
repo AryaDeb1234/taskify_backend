@@ -14,8 +14,14 @@ const taskRouter = require('./routes/users');
 
 const app = express();
 
+app.use((req, res, next) => {
+  console.log("Auth Header:", req.headers.authorization);
+  next();
+});
+
+
 // MongoDB Connection
-mongoose.connect(process.env.db_url, {
+mongoose.connect(process.env.DB_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
@@ -31,8 +37,11 @@ require("./config/passport")(passport); // configure passport-jwt
 
 // CORS setup (allow frontend to call API)
 app.use(cors({
-  origin: "http://localhost:3000", // frontend URL during dev
-  credentials: true               // allow sending credentials (if needed)
+  origin: [
+    "http://localhost:3000",           // Dev frontend
+    "https://your-frontend.vercel.app" // Add your deployed frontend URL here
+  ],
+  credentials: true
 }));
 
 // Body parsers
