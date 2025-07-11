@@ -21,10 +21,7 @@ app.use((req, res, next) => {
 
 
 // MongoDB Connection
-mongoose.connect(process.env.DB_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
+mongoose.connect(process.env.DB_URL)
 .then(() => console.log("✅ MongoDB connected"))
 .catch((err) => {
   console.error("❌ MongoDB connection failed:", err.message);
