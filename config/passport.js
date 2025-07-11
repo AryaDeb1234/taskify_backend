@@ -9,7 +9,7 @@ const pub_key = process.env.PUBLIC_KEY
   ? process.env.PUBLIC_KEY
   : fs.readFileSync(path.join(__dirname, "..", "rsa_public.pem"), "utf8");
 
-  console.log("Loaded public key:", pub_key );
+ // console.log("Loaded public key:", pub_key );
 
 // Options for JWT strategy
 const options = {
@@ -29,7 +29,7 @@ const strategy = new JwtStrategy(options, async (payload, done) => {
       return done(null, false);
     }
   } catch (err) {
-    console.error("Error in JWT strategy:", err);
+    //console.error("Error in JWT strategy:", err);
     return done(err, false);
   }
 });

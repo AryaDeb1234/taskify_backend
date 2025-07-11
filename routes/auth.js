@@ -42,7 +42,7 @@ router.post('/login', async function (req, res, next) {
       });
     }
   } catch (err) {
-    console.error("Error in login route:", err);
+    //console.error("Error in login route:", err);
     return res.status(500).json({
       success: false,
       message: "Server error during login",
@@ -87,7 +87,7 @@ router.post('/register', async function (req, res, next) {
     });
 
   } catch (err) {
-    console.error("Error during registration:", err);
+   // console.error("Error during registration:", err);
     res.status(500).json({
       success: false,
       message: "Something went wrong. Please try again.",
