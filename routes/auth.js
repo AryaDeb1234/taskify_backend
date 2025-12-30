@@ -22,7 +22,7 @@ router.post('/login', async function (req, res, next) {
     const isValid = validpassword(password, existuser.hash, existuser.salt);
 
     if (isValid) {
-      // Generate JWT token
+
       const tokenObject = issuejwt(existuser);
 
       return res.status(200).json({
@@ -42,7 +42,7 @@ router.post('/login', async function (req, res, next) {
       });
     }
   } catch (err) {
-    //console.error("Error in login route:", err);
+
     return res.status(500).json({
       success: false,
       message: "Server error during login",
@@ -51,7 +51,7 @@ router.post('/login', async function (req, res, next) {
   }
 });
 
-// POST /register
+
 router.post('/register', async function (req, res, next) {
   let { username, password } = req.body;
 
@@ -72,7 +72,6 @@ router.post('/register', async function (req, res, next) {
 
     const saveduser = await newuser.save();
 
-    // Issue JWT on successful registration
     const jwt = issuejwt(saveduser);
 
     res.status(201).json({
@@ -87,7 +86,6 @@ router.post('/register', async function (req, res, next) {
     });
 
   } catch (err) {
-   // console.error("Error during registration:", err);
     res.status(500).json({
       success: false,
       message: "Something went wrong. Please try again.",
@@ -96,9 +94,9 @@ router.post('/register', async function (req, res, next) {
   }
 });
 
-// GET /api/current-user (Protected route)
+
 router.get('/api/current-user', passport.authenticate("jwt", { session: false }), function (req, res) {
-  // Send back user info if JWT is valid
+  
   return res.status(200).json({
     loggedIn: true,
     user: {
@@ -108,21 +106,20 @@ router.get('/api/current-user', passport.authenticate("jwt", { session: false })
   });
 });
 
-// GET /logout (for frontend compatibility, but JWT logout happens client-side)
+
 router.get('/logout', function (req, res, next) {
-  // For JWT, we can't invalidate tokens server-side unless using a blacklist
   res.json({
     success: true,
     message: "You have logged out successfully. (Client must delete token.)"
   });
 });
 
-// Test route
+
 router.get('/', function (req, res, next) {
   res.json({ message: "API is working" });
 });
 
-// Protected test route
+
 router.get('/user/protected', passport.authenticate("jwt", { session: false }), function (req, res, next) {
   res.status(200).json({
     success: true,
